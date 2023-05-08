@@ -25,12 +25,12 @@ func GetProductsController(c echo.Context) error {
 
 // get product by id
 func GetProductController(c echo.Context) error {
-	productID, err := strconv.Atoi(c.Param("id"))
+	Category, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	product, err := database.GetProduct(productID)
+	product, err := database.GetProduct(Category)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}

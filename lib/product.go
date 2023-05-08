@@ -8,17 +8,17 @@ import (
 func GetProducts() (interface{}, error) {
 	var products []models.Product
 
-	if err := config.DB.Joins("Category = ?").Find(&products).Error; err != nil {
+	if err := config.DB.Joins("Category").Find(&products).Error; err != nil {
 		return nil, err
 	}
 	return products, nil
 }
 
-func GetProduct(productID int) (interface{}, error) {
-	var product models.Product
-	product.ID = uint(productID)
+func GetProduct(Category int) (interface{}, error) {
+	var product []models.Product
+	Category = int(Category)
 
-	if err := config.DB.Joins("Category = ?").Find(&product).Error; err != nil {
+	if err := config.DB.Where("category_id = ?", Category).Preload("Category").Find(&product).Error; err != nil {
 		return nil, err
 	}
 
@@ -30,7 +30,7 @@ func CreateProduct(b models.Product) (interface{}, error) {
 		return nil, err
 	}
 
-	if err := config.DB.Joins("Category = ?").Find(&b).Error; err != nil {
+	if err := config.DB.Joins("Category").Find(&b).Error; err != nil {
 		return nil, err
 	}
 	return b, nil
@@ -39,11 +39,11 @@ func CreateProduct(b models.Product) (interface{}, error) {
 func UpdateProduct(productID uint, b models.Product) (interface{}, error) {
 	product := models.Product{}
 	product.ID = productID
-	if err := config.DB.Joins("Category = ?").Find(&product).Error; err != nil {
+	if err := config.DB.Joins("Category").Find(&product).Error; err != nil {
 		return nil, err
 	}
 
-	product.CategoryId = b.CategoryId
+	product.CategoryID = b.CategoryID
 	product.ProductName = b.ProductName
 	product.Stock = b.Stock
 	product.Price = b.Price

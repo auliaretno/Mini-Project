@@ -6,9 +6,9 @@ import (
 
 type Product struct {
 	gorm.Model
-	CategoryId  int     `json:"idcategory" form:"idcategory"`
+	CategoryID  int      `json:"category_id" form:"category_id"`
 	Category    Category `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	ProductName string `json:"productname" form:"productname"`
-	Stock       int    `json:"stock" form:"stock"`
-	Price       int    `json:"price" form:"price"`
+	ProductName string   `json:"product_name" form:"product_name"`
+	Stock       int      `json:"stock" form:"stock"`
+	Price       int      `json:"price" form:"price"`
 }
