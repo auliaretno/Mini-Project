@@ -42,6 +42,7 @@ func UpdateUser(userID uint, u models.User) (interface{}, error) {
 
 	user.Name = u.Name
 	user.Email = u.Email
+	user.Role = u.Role
 	user.Password = u.Password
 
 	err := config.DB.Save(&user).Error

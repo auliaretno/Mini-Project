@@ -14,7 +14,7 @@ func New() *echo.Echo {
 	m.LogMiddleware(e)
 
 	eUser := e.Group("/users")
-	eUser.POST("", controllers.CreateUserController)
+	eUser.POST("/register", controllers.CreateUserController)
 	eUser.POST("/login", controllers.LoginUserController)
 	// 	Authenticated with JWT
 	eUserJwt := eUser.Group("")
@@ -24,34 +24,51 @@ func New() *echo.Echo {
 	eUserJwt.PUT("/:id", controllers.UpdateUserController)
 	eUserJwt.DELETE("/:id", controllers.DeleteUserController)
 
-	// blogs routes
-	eBlog := e.Group("/blogs")
-	eBlog.GET("", controllers.GetBlogsController)
-	eBlog.GET("/:id", controllers.GetBlogController)
-	// Authenticated with JWT
-	eBlogJwt := eBlog.Group("")
-	eBlogJwt.Use(mid.JWT([]byte(constants.SECRET_JWT)))
-	eBlogJwt.POST("", controllers.CreateBlogController)
-	eBlogJwt.PUT("/:id", controllers.UpdateBlogController)
-	eBlogJwt.DELETE("/:id", controllers.DeleteBlogController)
+	eAdmin := e.Group("/admins")
+	eAdmin.POST("/register", controllers.CreateAdminController)
+	eAdmin.POST("/login", controllers.LoginAdminController)
+	// 	Authenticated with JWT
+	eAdminJwt := eAdmin.Group("")
+	eAdminJwt.Use(mid.JWT([]byte(constants.SECRET_JWT)))
+	eAdminJwt.GET("", controllers.GetAdminsController)
+	eAdminJwt.GET("/:id", controllers.GetAdminController)
+	eAdminJwt.PUT("/:id", controllers.UpdateAdminController)
+	eAdminJwt.DELETE("/:id", controllers.DeleteAdminController)
 
 	//categories routes
-	e.GET("/categories", controllers.GetCategoriesController)
-	e.GET("/categories/:id", controllers.GetCategoryController)
+	eCategory := e.Group("/categories")
+	eCategory.GET("", controllers.GetCategoriesController)
+	eCategory.GET("/:id", controllers.GetCategoryController)
 
 	//categories routes admin
-	e.POST("admin/category", controllers.CreateCategoryController)
-	e.PUT("admin/categories/:id", controllers.UpdateCategoryController)
-	e.DELETE("admin/categories/:id", controllers.DeleteCategoryController)
+	eCategoryJwt := eCategory.Group("/admin")
+	eCategoryJwt.Use(mid.JWT([]byte(constants.SECRET_JWT)))
+	eCategoryJwt.POST("", controllers.CreateCategoryController)
+	eCategoryJwt.PUT("/:id", controllers.UpdateCategoryController)
+	eCategoryJwt.DELETE("/:id", controllers.DeleteCategoryController)
 
 	//products routes
-	e.GET("/products", controllers.GetProductsController)
-	e.GET("/products/:id", controllers.GetProductController)
+	eProducts := e.Group("/products")
+	eProducts.GET("", controllers.GetProductsController)
+	eProducts.GET("/:id", controllers.GetProductController)
 
 	//products routes admin
-	e.POST("admin/products", controllers.CreateProductController)
-	e.PUT("admin/products/:id", controllers.UpdateProductController)
-	e.DELETE("admin/products/:id", controllers.DeleteProductController)
+	eProductsJwt := eProducts.Group("/admin")
+	eProductsJwt.Use(mid.JWT([]byte(constants.SECRET_JWT)))
+	eProductsJwt.POST("", controllers.CreateProductController)
+	eProductsJwt.PUT("/:id", controllers.UpdateProductController)
+	eProductsJwt.DELETE("/:id", controllers.DeleteProductController)
+
+	//Orders routes admin
+	eOrders := e.Group("/orders")
+	eOrders.POST("", controllers.CreateOrderController)
+	eOrders.GET("/:id", controllers.GetOrderController)
+
+	//Orders routes user
+	eOrdersJwt := eOrders.Group("/admin")
+	eOrdersJwt.Use(mid.JWT([]byte(constants.SECRET_JWT)))
+	eOrdersJwt.GET("", controllers.GetOrdersController)
+	eOrdersJwt.DELETE("/:id", controllers.DeleteOrderController)
 
 	return e
 }

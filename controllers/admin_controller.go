@@ -2,9 +2,12 @@ package controllers
 
 import (
 	"net/http"
-	"strconv"
 	"project_petshop/config"
+	database "project_petshop/lib/database"
+	"project_petshop/middlewares"
 	"project_petshop/models"
+	"reflect"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -109,3 +112,33 @@ func UpdateAdminController(c echo.Context) error {
 		"admin":    admin,
 	})
 }
+
+func LoginAdminController(c echo.Context) error {
+	admin := models.Admin{}
+	c.Bind(&admin)
+
+	result, err := database.LoginAdminController(admin)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	reflectValue := reflect.ValueOf(result)
+	adminID := reflectValue.FieldByName("ID").Interface().(uint)
+	adminName := reflectValue.FieldByName("Name").Interface().(string)
+	adminEmail := reflectValue.FieldByName("Email").Interface().(string)
+	adminRole := reflectValue.FieldByName("Role").Interface().(string)
+
+
+	token, err := middlewares.CreateToken(int(adminID), adminName, adminRole)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	adminResponse := models.AdminResponse{ID: adminID, Name: adminName, Email: adminEmail, Token: token}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success login admin",
+		"user":    adminResponse,
+	})
+}
+

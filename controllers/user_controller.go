@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"strconv"
 
-	"project_petshop/lib"
+	database "project_petshop/lib/database"
 	"project_petshop/middlewares"
 	"project_petshop/models"
 
@@ -38,27 +38,24 @@ func GetUserController(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"messages": "success get users",
+		"messages": "success get user",
 		"users":    user,
 	})
 }
 
 // create new user
 func CreateUserController(c echo.Context) error {
-	var user models.User
+	user := models.User{}
+	c.Bind(&user)
 
-	if err := c.Bind(&user); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
-	}
-
-	u, err := database.CreateUser(user)
+	result, err := database.CreateUser(user)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	return c.JSON(http.StatusCreated, map[string]interface{}{
 		"message": "success create new user",
-		"user":    u,
+		"user":    result,
 	})
 }
 
@@ -115,8 +112,10 @@ func LoginUserController(c echo.Context) error {
 	userID := reflectValue.FieldByName("ID").Interface().(uint)
 	userName := reflectValue.FieldByName("Name").Interface().(string)
 	userEmail := reflectValue.FieldByName("Email").Interface().(string)
+	userRole := reflectValue.FieldByName("Role").Interface().(string)
 
-	token, err := middlewares.CreateToken(int(userID), userName)
+
+	token, err := middlewares.CreateToken(int(userID), userName, userRole)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}

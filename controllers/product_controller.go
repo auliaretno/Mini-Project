@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	database "project_petshop/lib"
+	database "project_petshop/lib/database"
 	"project_petshop/models"
 
 	"github.com/labstack/echo/v4"

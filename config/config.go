@@ -48,8 +48,8 @@ func InitDB() {
 
 func InitialMigration() {
 	DB.AutoMigrate(&models.User{})
-	DB.AutoMigrate(&models.Blog{})
 		DB.AutoMigrate(&models.Admin{})
 	DB.AutoMigrate(&models.Category{})
 			DB.AutoMigrate(&models.Product{})
+			DB.AutoMigrate(&models.Order{})
 }

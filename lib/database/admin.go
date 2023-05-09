@@ -42,6 +42,7 @@ func UpdateAdminController(adminID uint, u models.Admin) (interface{}, error) {
 
 	admin.Name = u.Name
 	admin.Email = u.Email
+	admin.Role = u.Role
 	admin.Password = u.Password
 
 	err := config.DB.Save(&admin).Error
@@ -58,4 +59,11 @@ func DeleteAdminController(adminID int) (interface{}, error) {
 		return nil, err
 	}
 	return adminID, nil
+}
+
+func LoginAdminController(u models.Admin) (interface{}, error) {
+	if err := config.DB.Where("email = ? AND password = ?", u.Email, u.Password).First(&u).Error; err != nil {
+		return nil, err
+	}
+	return u, nil
 }
