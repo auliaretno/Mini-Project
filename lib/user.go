@@ -5,7 +5,7 @@ import (
 	"project_petshop/models"
 )
 
-func GetUsersController() (interface{}, error) {
+func GetUsers() (interface{}, error) {
 	var users []models.User
 
 	if err := config.DB.Find(&users).Error; err != nil {
@@ -14,7 +14,7 @@ func GetUsersController() (interface{}, error) {
 	return users, nil
 }
 
-func GetUserController(userID uint) (interface{}, error) {
+func GetUser(userID uint) (interface{}, error) {
 	var user models.User
 	user.ID = userID
 
@@ -25,7 +25,7 @@ func GetUserController(userID uint) (interface{}, error) {
 	return user, nil
 }
 
-func CreateUserController(u models.User) (interface{}, error) {
+func CreateUser(u models.User) (interface{}, error) {
 	err := config.DB.Create(&u).Error
 
 	if err != nil {
@@ -35,7 +35,7 @@ func CreateUserController(u models.User) (interface{}, error) {
 	return u, nil
 }
 
-func UpdateUserController(userID uint, u models.User) (interface{}, error) {
+func UpdateUser(userID uint, u models.User) (interface{}, error) {
 	user := models.User{}
 	user.ID = userID
 	config.DB.First(&user)
@@ -51,7 +51,7 @@ func UpdateUserController(userID uint, u models.User) (interface{}, error) {
 	return user, nil
 }
 
-func DeleteUserController(userID int) (interface{}, error) {
+func DeleteUser(userID int) (interface{}, error) {
 	err := config.DB.Delete(&models.User{}, userID).Error
 
 	if err != nil {

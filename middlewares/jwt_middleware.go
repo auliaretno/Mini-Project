@@ -1,8 +1,8 @@
 package middlewares
 
 import (
-	"time"
 	"project_petshop/constants"
+	"time"
 
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"

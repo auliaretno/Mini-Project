@@ -13,7 +13,6 @@ func New() *echo.Echo {
 	e := echo.New()
 	m.LogMiddleware(e)
 
-	// users routes
 	eUser := e.Group("/users")
 	eUser.POST("", controllers.CreateUserController)
 	eUser.POST("/login", controllers.LoginUserController)
