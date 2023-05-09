@@ -70,5 +70,27 @@ func New() *echo.Echo {
 	eOrdersJwt.GET("", controllers.GetOrdersController)
 	eOrdersJwt.DELETE("/:id", controllers.DeleteOrderController)
 
+	//petcare routes
+	ePetcare := e.Group("/petcare")
+	ePetcare.GET("", controllers.GetCategoriesController)
+	ePetcare.GET("/:id", controllers.GetPetcareController)
+
+	//Petcare routes admin
+	ePetcareJwt := ePetcare.Group("/admin")
+	ePetcareJwt.Use(mid.JWT([]byte(constants.SECRET_JWT)))
+	ePetcareJwt.POST("", controllers.CreatePetcareController)
+	ePetcareJwt.DELETE("/:id", controllers.DeletePetcareController)
+
+	//Booking routes admin
+	eBooking := e.Group("/booking")
+	eBooking.POST("", controllers.CreateOrderController)
+	eBooking.GET("/:id", controllers.GetOrderController)
+
+	//Booking routes user
+	eBookingJwt := eBooking.Group("/admin")
+	eBookingJwt.Use(mid.JWT([]byte(constants.SECRET_JWT)))
+	eBookingJwt.GET("", controllers.GetBookingController)
+	eBookingJwt.DELETE("/:id", controllers.DeleteBookingController)
+
 	return e
 }
