@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/labstack/echo/v4"
@@ -89,4 +90,60 @@ func TestGetCategoryController(t *testing.T) {
 	assert.Equal(t, "Success get category by id", response.Message)
 	assert.Equal(t, "Cats", response.Category.Pet)
 }
+
+func TestCreateCategoryController(t *testing.T) {
+	// Create a new Echo instance
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodPost, "/categories", strings.NewReader(`{"name": "Test Category"}`))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+
+	// Call the controller function
+	err := CreateCategoryController(c)
+
+	// Assert the response
+	assert.NoError(t, err)
+	assert.Equal(t, http.StatusOK, rec.Code)
+}
+
+func TestDeleteCategoryController(t *testing.T) {
+	// Create a new Echo instance
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodDelete, "/categories/1", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetParamNames("id")
+	c.SetParamValues("1")
+
+	// Call the controller function
+	err := DeleteCategoryController(c)
+
+	// Assert the response
+	assert.NoError(t, err)
+	assert.Equal(t, http.StatusOK, rec.Code)
+}
+
+func TestUpdateCategoryController(t *testing.T) {
+	// Create a new Echo instance
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodPut, "/categories/1", strings.NewReader(`{"name": "Updated Category"}`))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetParamNames("id")
+	c.SetParamValues("1")
+
+	// Call the controller function
+	err := UpdateCategoryController(c)
+
+	// Assert the response
+	assert.NoError(t, err)
+	assert.Equal(t, http.StatusOK, rec.Code)
+}
+
+
+
+
+
 

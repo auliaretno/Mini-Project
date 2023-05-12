@@ -11,6 +11,6 @@ COPY . .
 
 RUN go build -o /project-petshop
 
-EXPOSE 3306
+EXPOSE 8000
 
 CMD [ "/project-petshop" ]

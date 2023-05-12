@@ -1,0 +1,35 @@
+version: '3.9'
+volumes:
+  db:
+    driver: local
+services:
+  mysqldb:
+    image: project
+    container_name: project
+    restart: always
+    environment:
+      MYSQL_DATABASE: project_petshop
+      MYSQL_ROOT_PASSWORD: 09876aulia
+    ports:
+      - "3306:3306"
+    volumes:
+      - db:/var/lib/mysql
+    networks:
+      - gonet
+
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: project
+    ports:
+      - "8000:8000"
+    restart: always
+    volumes:
+      - ./:/rest-api
+    networks:
+      - gonet
+      
+networks:
+  gonet:
+    driver: bridge
