@@ -83,8 +83,8 @@ func New() *echo.Echo {
 
 	//Booking routes admin
 	eBooking := e.Group("/booking")
-	eBooking.POST("", controllers.CreateOrderController)
-	eBooking.GET("/:id", controllers.GetOrderController)
+	eBooking.POST("", controllers.CreateBookingController)
+	eBooking.GET("/:id", controllers.GetBookingController)
 
 	//Booking routes user
 	eBookingJwt := eBooking.Group("/admin")

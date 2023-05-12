@@ -1,7 +1,6 @@
 package models
 
 import (
-	"time"
 
 	"gorm.io/gorm"
 )
@@ -13,5 +12,5 @@ type Booking struct {
 	UserID      int       `json:"user_id" form:"user_id"`
 	User        User      `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	BookingName string    `json:"booking_name" form:"booking_name"`
-	BookingDate time.Time `json:"booking_date" form:"booking_date"`
+	BookingDate string `json:"booking_date" form:"booking_date"`
 }
